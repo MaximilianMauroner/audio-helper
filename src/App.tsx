@@ -4,6 +4,7 @@ import {
   onCleanup,
   type Component,
 } from "solid-js";
+import { Title } from "@solidjs/meta";
 
 class StereoOscillator {
   private audioContext: AudioContext;
@@ -148,115 +149,117 @@ const App: Component = () => {
   });
 
   return (
-    <div class="p-4 flex flex-col gap-2">
-      <h1 class="text-3xl font-semibold mx-auto text-pink-600">
-        Stereo Oscillator
-      </h1>
-      <p class="max-w-prose mb-2 mx-auto text-gray-600">
-        This is a simple stereo oscillator that plays two different frequencies
-        in the left and right channels(and both). So that you can easily test
-        your headphones or whatever in the browser.
-      </p>
-      <div class="p-2 rounded-lg border">
-        <span>Volume: {Math.round(volume() * 100)}/100</span>
-        <input
-          type="range"
-          min={0}
-          max={1}
-          step={0.01}
-          onInput={(e) => {
-            setVolume(e.target.valueAsNumber);
-            stereoOsc.setVolumes(e.target.valueAsNumber);
-          }}
-          value={volume()}
-          class="block w-full max-w-lg"
-        />
-      </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 w-full gap-2 ">
-        <div class="border rounded-lg w-full p-2">
-          <div class="flex justify-start gap-2">
-            <span>Left Frequency:</span>
+    <>
+      <div class="p-4 flex flex-col gap-2">
+        <h1 class="text-3xl font-semibold mx-auto text-pink-600">
+          Frequency Tester
+        </h1>
+        <h2 class="max-w-prose mb-2 mx-auto text-gray-600">
+          This is a simple frequency tester that plays two different frequencies
+          in the left and right channels(and both). So that you can easily test
+          your headphones or whatever you use in the browser.
+        </h2>
+        <div class="p-2 rounded-lg border">
+          <span>Volume: {Math.round(volume() * 100)}/100</span>
+          <input
+            type="range"
+            min={0}
+            max={1}
+            step={0.01}
+            onInput={(e) => {
+              setVolume(e.target.valueAsNumber);
+              stereoOsc.setVolumes(e.target.valueAsNumber);
+            }}
+            value={volume()}
+            class="block w-full max-w-lg"
+          />
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 w-full gap-2 ">
+          <div class="border rounded-lg w-full p-2">
+            <div class="flex justify-start gap-2">
+              <span>Left Frequency:</span>
+              <input
+                type="number"
+                min={0}
+                max={25000}
+                value={leftFrequency()}
+                onInput={(e) => setLeftFrequency(e.target.valueAsNumber)}
+              />
+            </div>
             <input
-              type="number"
+              type="range"
               min={0}
               max={25000}
               value={leftFrequency()}
               onInput={(e) => setLeftFrequency(e.target.valueAsNumber)}
+              step={1}
+              class="block w-full"
             />
+            <button
+              class="block rounded-md bg-pink-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-pink-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-600"
+              onClick={() => {
+                if (isPlayingLeft()) {
+                  stereoOsc.stopLeft();
+                  setIsPlayingLeft(false);
+                } else {
+                  playFrequency("left");
+                }
+              }}
+            >
+              {!isPlayingLeft() ? "Play Left" : "Pause Left"}
+            </button>
           </div>
-          <input
-            type="range"
-            min={0}
-            max={25000}
-            value={leftFrequency()}
-            onInput={(e) => setLeftFrequency(e.target.valueAsNumber)}
-            step={1}
-            class="block w-full"
-          />
-          <button
-            class="block rounded-md bg-pink-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-pink-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-600"
-            onClick={() => {
-              if (isPlayingLeft()) {
-                stereoOsc.stopLeft();
-                setIsPlayingLeft(false);
-              } else {
-                playFrequency("left");
-              }
-            }}
-          >
-            {!isPlayingLeft() ? "Play Left" : "Pause Left"}
-          </button>
-        </div>
-        <div class="border rounded-lg w-full p-2">
-          <div class="flex justify-start gap-2">
-            <span>Right Frequency:</span>
+          <div class="border rounded-lg w-full p-2">
+            <div class="flex justify-start gap-2">
+              <span>Right Frequency:</span>
+              <input
+                type="number"
+                min={0}
+                max={25000}
+                value={rightFrequency()}
+                onInput={(e) => setRightFrequency(e.target.valueAsNumber)}
+              />
+            </div>
             <input
-              type="number"
+              type="range"
               min={0}
               max={25000}
               value={rightFrequency()}
               onInput={(e) => setRightFrequency(e.target.valueAsNumber)}
+              step={1}
+              class="block w-full"
             />
+            <button
+              class="block rounded-md bg-pink-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-pink-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-600"
+              onClick={() => {
+                if (isPlayingRight()) {
+                  stereoOsc.stopRight();
+                  setIsPlayingRight(false);
+                } else {
+                  playFrequency("right");
+                }
+              }}
+            >
+              {!isPlayingRight() ? "Play Right" : "Pause Right"}
+            </button>
           </div>
-          <input
-            type="range"
-            min={0}
-            max={25000}
-            value={rightFrequency()}
-            onInput={(e) => setRightFrequency(e.target.valueAsNumber)}
-            step={1}
-            class="block w-full"
-          />
-          <button
-            class="block rounded-md bg-pink-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-pink-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-600"
-            onClick={() => {
-              if (isPlayingRight()) {
-                stereoOsc.stopRight();
-                setIsPlayingRight(false);
-              } else {
-                playFrequency("right");
-              }
-            }}
-          >
-            {!isPlayingRight() ? "Play Right" : "Pause Right"}
-          </button>
         </div>
+        <button
+          class="block rounded-md bg-pink-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-pink-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-600"
+          onClick={() => {
+            if (isPlayingRight() && isPlayingLeft()) {
+              stereoOsc.stop();
+              setIsPlayingRight(false);
+              setIsPlayingLeft(false);
+            } else {
+              playFrequency("both");
+            }
+          }}
+        >
+          {!(isPlayingRight() && isPlayingLeft()) ? "Play Both" : "Pause Both"}
+        </button>
       </div>
-      <button
-        class="block rounded-md bg-pink-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-pink-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-600"
-        onClick={() => {
-          if (isPlayingRight() && isPlayingLeft()) {
-            stereoOsc.stop();
-            setIsPlayingRight(false);
-            setIsPlayingLeft(false);
-          } else {
-            playFrequency("both");
-          }
-        }}
-      >
-        {!(isPlayingRight() && isPlayingLeft()) ? "Play Both" : "Pause Both"}
-      </button>
-    </div>
+    </>
   );
 };
 

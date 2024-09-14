@@ -1,7 +1,7 @@
 {
   "name": "audio-helper",
   "version": "0.0.1",
-  "description": "This is a simple stereo oscillator that plays two different frequencies in the left and right channels(and both). So that you can easily test your headphones or whatever in the browser",
+  "description": "This is a simple frequency tester that plays two different frequencies in the left and right channels(and both). So that you can easily test your headphones or whatever in the browser",
   "scripts": {
     "start": "vite",
     "dev": "vite",
